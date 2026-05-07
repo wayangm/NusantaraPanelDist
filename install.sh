@@ -262,7 +262,7 @@ Auto_Swap() {
 }
 Service_Add() {
     if Command_Exists systemctl ; then
-        wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O /usr/lib/systemd/system/btpanel.service ${download_Url}/init/systemd/btpanel.service -t 5 -T 20
+        wget --no-check-certificate -O /usr/lib/systemd/system/btpanel.service ${download_Url}/init/systemd/btpanel.service -t 5 -T 20
         systemctl daemon-reload
         systemctl enable btpanel
 
@@ -353,9 +353,9 @@ EOF
             if [ -z "${download_Url}" ];then
                 download_Url="https://node.aapanel.com"
             fi
-            curl -H "Authorization: token $GITHUB_TOKEN" -sSk --connect-timeout 20 -m 60 -O ${download_Url}/src/el7repo.tar.gz
+            curl -sSk --connect-timeout 20 -m 60 -O ${download_Url}/src/el7repo.tar.gz
             if [ -f "/usr/bin/wget" ] && [ ! -s "el7repo.tar.gz" ];then
-                wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O el7repo.tar.gz ${download_Url}/src/el7repo.tar.gz -t 3 -T 20
+                wget --no-check-certificate -O el7repo.tar.gz ${download_Url}/src/el7repo.tar.gz -t 3 -T 20
             fi
             rm -f /etc/yum.repos.d/*.repo
             tar -xvzf el7repo.tar.gz -C /etc/yum.repos.d/
@@ -397,7 +397,7 @@ Set_Centos8_Repo(){
         if [ ! -f "/usr/bin/tar" ] ;then
             curl -Ss --connect-timeout 20 -m 60 -O ${download_Url}/src/tar-1.30-5.el8.x86_64.rpm
             if [ -f "/usr/bin/wget" ] && [ ! -s "tar-1.30-5.el8.x86_64.rpm" ];then
-                wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O tar-1.30-5.el8.x86_64.rpm ${download_Url}/src/tar-1.30-5.el8.x86_64.rpm -t 3 -T 20
+                wget --no-check-certificate -O tar-1.30-5.el8.x86_64.rpm ${download_Url}/src/tar-1.30-5.el8.x86_64.rpm -t 3 -T 20
             fi
             # yum install tar-1.30-5.el8.x86_64.rpm -y
             rpm -ivh tar-1.30-5.el8.x86_64.rpm
@@ -409,7 +409,7 @@ Set_Centos8_Repo(){
         \cp -rpa /etc/yum.repos.d/ /etc/yumBak
         curl -Ss --connect-timeout 20 -m 60 -O ${download_Url}/src/el8repo.tar.gz
         if [ -f "/usr/bin/wget" ] && [ ! -s "el8repo.tar.gz" ];then
-            wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O el8repo.tar.gz ${download_Url}/src/el8repo.tar.gz -t 3 -T 20
+            wget --no-check-certificate -O el8repo.tar.gz ${download_Url}/src/el8repo.tar.gz -t 3 -T 20
         fi
         rm -f /etc/yum.repos.d/*.repo
         tar -xvzf el8repo.tar.gz -C /etc/yum.repos.d/
@@ -468,7 +468,8 @@ Check_apt_status(){
 }
 
 get_node_url() {
-    download_Url='https://raw.githubusercontent.com/wayangm/NusantaraPanel/main'
+    download_Url='https://node.aapanel.com'
+    private_Url='https://raw.githubusercontent.com/wayangm/NusantaraPanel/main'
 
     if [ ! -f /bin/curl ]; then
         if [ "${PM}" = "yum" ]; then
@@ -1210,7 +1211,7 @@ Install_Openssl111(){
     fi
 
     if [[ $os_type = "el" ]] && [[ $os_version == "7" ]] && [[ $openssl_make != "yes" ]]; then
-        wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O openssl111.tar.gz ${download_Url}/install/src/openssl111${CPU_arch}.tar.gz -t 5 -T 20
+        wget --no-check-certificate -O openssl111.tar.gz ${download_Url}/install/src/openssl111${CPU_arch}.tar.gz -t 5 -T 20
         tmp_size=$(du -b openssl111.tar.gz | awk '{print $1}')
         if [ $tmp_size -lt 5014046 ]; then
             rm -f openssl111.tar.gz
@@ -1231,7 +1232,7 @@ Install_Openssl111(){
             apt install -y perl
         fi
         opensslVersion="1.1.1o"
-        wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O openssl-${opensslVersion}.tar.gz ${download_Url}/src/openssl-${opensslVersion}.tar.gz -t 5 -T 20
+        wget --no-check-certificate -O openssl-${opensslVersion}.tar.gz ${download_Url}/src/openssl-${opensslVersion}.tar.gz -t 5 -T 20
         tmp_size=$(du -b openssl-${opensslVersion}.tar.gz | awk '{print $1}')
         if [ $tmp_size -lt 9056386 ]; then
             rm -f openssl-${opensslVersion}.tar.gz
@@ -1336,13 +1337,13 @@ Check_PIP_Packages(){
     check_pip_packs="/www/server/panel/check-pip-packs.txt"
     if [ ! -s "${check_pip_packs}" ]; then
         check_pip_packs="/tmp/check-pip-packs_3.12.txt"
-        wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O ${check_pip_packs} ${download_Url}/install/pyenv/3.12/check-pip-packs_3.12.txt -t 5 -T 20
+        wget --no-check-certificate -O ${check_pip_packs} ${download_Url}/install/pyenv/3.12/check-pip-packs_3.12.txt -t 5 -T 20
     fi
 
     Install_PIP_PACKS_File="/www/server/panel/requirements.txt"
     if [ ! -s "${Install_PIP_PACKS_File}" ]; then
         Install_PIP_PACKS_File="/tmp/pip_en_3.12.txt"
-        wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O ${Install_PIP_PACKS_File} ${download_Url}/install/pyenv/3.12/pip_en_3.12.txt -t 5 -T 20
+        wget --no-check-certificate -O ${Install_PIP_PACKS_File} ${download_Url}/install/pyenv/3.12/pip_en_3.12.txt -t 5 -T 20
     fi
     
     PIP_PACKS=$(cat ${check_pip_packs} )
@@ -1398,7 +1399,7 @@ Install_Python_Lib() {
         Use_Openssl111="yes"
     fi
 
-    curl -H "Authorization: token $GITHUB_TOKEN" -sSk --connect-timeout 5 -m 60 $download_Url/install/pip_select.sh | bash
+    curl -sSk --connect-timeout 5 -m 60 $download_Url/install/pip_select.sh | bash
     pyenv_path="/www/server/panel"
     if [ -f $pyenv_path/pyenv/bin/python ]; then
         is_ssl=$($python_bin -c "import ssl" 2>&1 | grep cannot)
@@ -1407,7 +1408,7 @@ Install_Python_Lib() {
             chmod -R 700 $pyenv_path/pyenv/bin
             is_package=$($python_bin -m psutil 2>&1 | grep package)
             if [ "$is_package" = "" ]; then
-                wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O $pyenv_path/pyenv/pip.txt $download_Url/install/pyenv/3.12/pip_en_3.12.txt -t 5 -T 20
+                wget --no-check-certificate -O $pyenv_path/pyenv/pip.txt $download_Url/install/pyenv/3.12/pip_en_3.12.txt -t 5 -T 20
                 $pyenv_path/pyenv/bin/pip install -U pip
                 $pyenv_path/pyenv/bin/pip install -U setuptools
                 $pyenv_path/pyenv/bin/pip install -r $pyenv_path/pyenv/pip.txt
@@ -1480,10 +1481,10 @@ Install_Python_Lib() {
     fi
     if [ "${os_version}" != "" ]; then
         pyenv_file="/www/pyenv.tar.gz"
-        wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O $pyenv_file $download_Url/install/pyenv/3.12/pyenv-${os_type}${os_version}-x${is64bit}${python_version}.tar.gz -t 5 -T 20
+        wget --no-check-certificate -O $pyenv_file $download_Url/install/pyenv/3.12/pyenv-${os_type}${os_version}-x${is64bit}${python_version}.tar.gz -t 5 -T 20
         if [ "$?" != "0" ];then
             get_node_url $download_Url
-            wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O $pyenv_file $download_Url/install/pyenv/3.12/pyenv-${os_type}${os_version}-x${is64bit}${python_version}.tar.gz -t 5 -T 20
+            wget --no-check-certificate -O $pyenv_file $download_Url/install/pyenv/3.12/pyenv-${os_type}${os_version}-x${is64bit}${python_version}.tar.gz -t 5 -T 20
         fi
         tmp_size=$(du -b $pyenv_file | awk '{print $1}')
         if [ $tmp_size -lt 122271175 ]; then
@@ -1514,7 +1515,7 @@ Install_Python_Lib() {
     cd /www
     python_src='/www/python_src.tar.xz'
     python_src_path="/www/Python-${py_version}"
-    wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O $python_src $download_Url/src/Python-${py_version}.tar.xz -t 5 -T 20
+    wget --no-check-certificate -O $python_src $download_Url/src/Python-${py_version}.tar.xz -t 5 -T 20
     tmp_size=$(du -b $python_src | awk '{print $1}')
     if [ $tmp_size -lt 10703460 ]; then
         rm -f $python_src
@@ -1542,8 +1543,8 @@ Install_Python_Lib() {
     fi
     cd ~
     rm -rf $python_src_path
-    wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O $pyenv_path/pyenv/bin/activate $download_Url/install/pyenv/activate.panel -t 5 -T 20
-    wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O $pyenv_path/pyenv/pip.txt $download_Url/install/pyenv/3.12/pip-3.12.3.txt -t 5 -T 20
+    wget --no-check-certificate -O $pyenv_path/pyenv/bin/activate $download_Url/install/pyenv/activate.panel -t 5 -T 20
+    wget --no-check-certificate -O $pyenv_path/pyenv/pip.txt $download_Url/install/pyenv/3.12/pip-3.12.3.txt -t 5 -T 20
     ln -sf $pyenv_path/pyenv/bin/pip3.12 $pyenv_path/pyenv/bin/pip
     ln -sf $pyenv_path/pyenv/bin/python3.12 $pyenv_path/pyenv/bin/python
     ln -sf $pyenv_path/pyenv/bin/pip3.12 /usr/bin/btpip
@@ -1607,7 +1608,7 @@ Install_Bt() {
     fi
 
     panel_file="${setup_path}/panel.tar.gz"
-    wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O ${panel_file} ${download_Url}/panel.tar.gz -t 5 -T 20
+    wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O ${panel_file} ${private_Url}/panel.tar.gz -t 5 -T 20
 
     tmp_size=$(du -b ${panel_file} | awk '{print $1}')
     if [ $tmp_size -lt 1000000 ]; then
@@ -1644,8 +1645,8 @@ Install_Bt() {
     \cp -arpf /www/server/panel/init.sh /etc/init.d/bt
     if [[ ! -s "/etc/init.d/bt" ]];then
         rm -f /etc/init.d/bt
-        wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O /etc/init.d/bt ${download_Url}/install/src/bt7_en.init -t 5 -T 20
-        wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O /www/server/panel/init.sh ${download_Url}/install/src/bt7_en.init -t 5 -T 20
+        wget --no-check-certificate -O /etc/init.d/bt ${download_Url}/install/src/bt7_en.init -t 5 -T 20
+        wget --no-check-certificate -O /www/server/panel/init.sh ${download_Url}/install/src/bt7_en.init -t 5 -T 20
         if [[ ! -s "/etc/init.d/bt" ]];then
             Red_Error "ERROR: /etc/init.d/bt file content is 0kb "
         fi
@@ -1656,7 +1657,7 @@ Install_Bt() {
     chmod -R +x ${setup_path}/server/panel/script
     ln -sf /etc/init.d/bt /usr/bin/bt
     echo "${panelPort}" >${setup_path}/server/panel/data/port.pl
-    wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O /www/server/panel/data/softList.conf ${download_Url}/install/conf/softList_en.conf -t 5 -T 20
+    wget --no-check-certificate -O /www/server/panel/data/softList.conf ${download_Url}/install/conf/softList_en.conf -t 5 -T 20
 }
 
 Use_self_signed_certificate() {
@@ -1863,7 +1864,7 @@ Set_Firewall() {
 Get_Ip_Address() {
     getIpAddress=""
     # 	getIpAddress=$(curl -sS --connect-timeout 10 -m 60 https://brandnew.aapanel.com/api/common/getClientIP)
-    # getIpAddress=$(curl -H "Authorization: token $GITHUB_TOKEN" -sSk --connect-timeout 10 -m 60 https://www.aapanel.com/api/common/getClientIP)
+    # getIpAddress=$(curl -sSk --connect-timeout 10 -m 60 https://www.aapanel.com/api/common/getClientIP)
 
 
     ipv4_address=""
@@ -1917,7 +1918,7 @@ Get_Ip_Address() {
     fi
 }
 Setup_Count() {
-    curl -H "Authorization: token $GITHUB_TOKEN" -sSk --connect-timeout 10 -m 60 https://www.aapanel.com/api/setupCount/setupPanel?o=$1 >/dev/null 2>&1
+    curl -sSk --connect-timeout 10 -m 60 https://www.aapanel.com/api/setupCount/setupPanel?o=$1 >/dev/null 2>&1
     # curl -sS --connect-timeout 10 -m 60 https://console.Nusantara Panel.com/Api/SetupCount?type=Linux > /dev/null 2>&1
     if [ "$1" != "" ]; then
         echo $1 >/www/server/panel/data/o.pl
