@@ -469,7 +469,9 @@ Check_apt_status(){
 
 get_node_url() {
     download_Url='https://node.aapanel.com'
-    private_Url='https://raw.githubusercontent.com/wayangm/NusantaraPanel/main'
+    private_Url='https://api.github.com/repos/wayangm/NusantaraPanel/contents'
+    private_Raw='https://raw.githubusercontent.com/wayangm/NusantaraPanel/main'
+
 
     if [ ! -f /bin/curl ]; then
         if [ "${PM}" = "yum" ]; then
@@ -1608,7 +1610,28 @@ Install_Bt() {
     fi
 
     panel_file="${setup_path}/panel.tar.gz"
-    wget --header="Authorization: token $GITHUB_TOKEN" --no-check-certificate -O ${panel_file} ${private_Url}/panel.tar.gz -t 5 -T 20
+    
+    # Use GitHub API to get fresh blob SHA (bypasses CDN cache on raw.githubusercontent.com)
+    echo "Resolving latest panel.tar.gz from GitHub API..."
+    panel_meta=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+        -H "Accept: application/vnd.github.v3+json" \
+        "${private_Url}/panel.tar.gz")
+    panel_sha=$(echo "$panel_meta" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('sha',''))" 2>/dev/null)
+    
+    if [ -n "$panel_sha" ]; then
+        echo "Downloading panel.tar.gz via blob API (SHA: ${panel_sha:0:8}...)..."
+        wget --header="Authorization: token $GITHUB_TOKEN" \
+             --header="Accept: application/vnd.github.v3.raw" \
+             --no-check-certificate -O ${panel_file} \
+             "https://api.github.com/repos/wayangm/NusantaraPanel/git/blobs/${panel_sha}" \
+             -t 5 -T 120
+    else
+        echo "API resolve failed, falling back to raw download..."
+        wget --header="Authorization: token $GITHUB_TOKEN" \
+             --no-check-certificate -O ${panel_file} \
+             "${private_Raw}/panel.tar.gz" \
+             -t 5 -T 60
+    fi
 
     tmp_size=$(du -b ${panel_file} | awk '{print $1}')
     if [ $tmp_size -lt 1000000 ]; then
