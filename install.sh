@@ -1662,6 +1662,7 @@ Install_Bt() {
 
 Use_self_signed_certificate() {
     echo "Use Self-signed certificate"
+    mkdir -p /www/server/panel/ssl
     rm -f /www/server/panel/ssl/*
     SSL_path=/www/server/panel/ssl
     # Create private key
@@ -1726,7 +1727,7 @@ Set_Bt_Panel() {
     fi
     cd ${setup_path}/server/panel/
     if [ "$SET_SSL" == true ]; then
-        # mkdir /www/server/panel/ssl
+        mkdir -p /www/server/panel/ssl
         echo "SET ssl, please wait...."
         ssl=$(/www/server/panel/pyenv/bin/python /www/server/panel/tools.py ssl)
         echo ${ssl}
